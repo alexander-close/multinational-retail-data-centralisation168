@@ -18,4 +18,8 @@ if __name__=='__main__': # just to test functionality
   instance = DatabaseConnector(yaml_file)
   extractor = DataExtractor()
   df = extractor.read_rds_table(instance, 'table')
-  print(len(df))
+  # print(len(df))
+  for name in instance.list_db_tables():
+    if 'user' in name:
+      print(name)
+
