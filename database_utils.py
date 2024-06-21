@@ -34,40 +34,15 @@ class DatabaseConnector:
     metadata = MetaData()
     metadata.reflect(engine, schema=schema)
     return list(metadata.tables.keys())
+  
+  def upload_to_db(self,df,table):
+    pass 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # to test code 
   inst = DatabaseConnector(yaml_file)
-
   engine = inst.init_db_engine()
   with engine.connect() as conn:
     result = conn.execute(f"select count(*) from legacy_users")
     tables = [row[0] for row in result]
     print(tables)
-  # print(inst.list_db_tables())
-  # engine = inst.init_db_engine()
-
-  # inspector = inspect(engine)
-  # print(inspector.get_table_names())
-
-  # with engine.connect() as connection:
-  #   result = connection.execute(text("SELECT * FROM information_schema.tables"))
-    # for row in result:
-    #   print(row)
-  # print(tab)
-
-# from sqlalchemy import create_engine,text
-
-# DATABASE_TYPE = 'postgresql'
-# DBAPI = 'psycopg2'
-# HOST = 'data-handling-project-readonly.cq2e8zno855e.eu-west-1.rds.amazonaws.com'
-# USER = 'aicore_admin'
-# PASSWORD = 'AiCore2022'
-# DATABASE = 'postgres'
-# PORT = 5432
-
-# engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
-
-# with engine.connect() as connection:
-#     result = connection.execute(text("select * from information_schema.tables"))
-#     for row in result:
-#         print(row)
+  
