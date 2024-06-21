@@ -1,11 +1,21 @@
-from database_utils.py import DatabaseConnector as DbC
+from database_utils import DatabaseConnector
+import pandas as pd
 
 class DataExtractor:
-  def __init__(self,yaml_file):
-    self.yaml_file=yaml_file
-  def read_rds_table(self):
-    connector = DbC(self.yaml_file)
-    return 'worked'
+  def __init__(self):
+    pass
 
-inst = DataExtractor('db_creds.yaml')
-inst.reads_rdstable()
+  def read_rds_table(self,instance,table):
+    engine = instance.init_db_engine()
+    if table in instance.list_db_tables():
+      return pd.read_sql_table(table,engine)
+    else:
+      return 'Table not in schema.'
+  
+
+if __name__=='__main__': # just to test functionality
+  yaml_file = 'db_creds.yaml'
+  instance = DatabaseConnector(yaml_file)
+  extractor = DataExtractor()
+  df = extractor.read_rds_table(instance, 'table')
+  print(len(df))
