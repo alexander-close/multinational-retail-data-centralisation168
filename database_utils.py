@@ -1,5 +1,6 @@
+import pandas as pd
 import yaml
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, text
 
 yaml_file = 'db_creds.yaml'
 
@@ -23,12 +24,19 @@ class DatabaseConnector:
     
   def list_db_tables(self,schema='public'):
     engine = self.init_db_engine()
-    return inspect(engine).get_table_names(schema=schema)
+    self.table_list = inspect(engine).get_table_names(schema=schema)
+    return self.table_list
   
-  def upload_to_db(self,df,table):
-    pass 
+  def upload_to_db(self,df,password=input('Click here to type personal pw: '),table_name='dim_users'):
+    conn_str = f"postgresql://postgres:{password}@localhost:5432/sales_data"
+    with create_engine(conn_str).connect() as conn:
+      df.to_sql(table_name, con=conn, index=False, if_exists='replace')
+    
 
 if __name__ == '__main__': # to test code 
   inst = DatabaseConnector(yaml_file)
-  print(inst.list_db_tables())
-  
+  df = pd.DataFrame({
+    'id': [1, 2, 3],
+    'name': ['Alice', 'Bob', 'Charlie'],
+    'age': [25, 30, 35]})
+  inst.upload_to_db(df,table_name='new table test')
