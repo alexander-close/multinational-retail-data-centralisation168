@@ -25,14 +25,23 @@ class DataExtractor:
   
   def list_number_of_stores(self,endpoint,headers):
     NOS = requests.get(endpoint,headers=headers)
-    if NOS.status_code == 200:
+    if NOS.status_code < 400:
       self.number_stores = NOS.json()['number_stores']
+      self.NOS_endpoint = endpoint
       return NOS.json()['number_stores']
     else:
       return print(f'Code {NOS.status_code}. Try self.number_stores')
     
-  def retrieve_stores_data(self,endpoint):
-    pass
+  def retrieve_stores_data(self,endpoint,headers):
+    df = pd.DataFrame()
+    NOS = self.list_number_of_stores(self.NOS_endpoint,headers=headers)
+    if type(NOS) == int:
+      for i in range(NOS):
+        RAS = requests.get(endpoint+f'{i}',headers=headers).json()
+        df = pd.concat([df,pd.DataFrame([RAS])])
+      return df
+    else:
+      print("Code error")
 
   
 
@@ -40,7 +49,7 @@ if __name__=='__main__': # to test functionality
   yaml_file = 'db_creds.yaml'
   # instance = DatabaseConnector(yaml_file)
   
-  extractor = DataExtractor()
-  df = extractor.retrieve_pdf_data(pdf_link)
+  # extractor = DataExtractor()
+  # df = extractor.retrieve_pdf_data(pdf_link)
 
-  print(len(df))
+  # print(len(df))
