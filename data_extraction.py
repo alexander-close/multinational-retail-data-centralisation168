@@ -1,12 +1,13 @@
 from database_utils import DatabaseConnector
 import pandas as pd
 import tabula
+import requests
 
 pdf_link = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'
 
 class DataExtractor:
   def __init__(self):
-    self.name = 'DataExtractor'
+    self.number_stores = 0
 
   def read_rds_table(self,instance,table_name):
     engine = instance.init_db_engine()
@@ -21,6 +22,17 @@ class DataExtractor:
     for dfs in df_list:
       df = pd.concat([df,dfs])
     return df
+  
+  def list_number_of_stores(self,endpoint,headers):
+    NOS = requests.get(endpoint,headers=headers)
+    if NOS.status_code == 200:
+      self.number_stores = NOS.json()['number_stores']
+      return NOS.json()['number_stores']
+    else:
+      return print(f'Code {NOS.status_code}. Try self.number_stores')
+    
+  def retrieve_stores_data(self,endpoint):
+    pass
 
   
 
