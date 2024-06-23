@@ -27,7 +27,7 @@ class DatabaseConnector:
     self.table_list = inspect(engine).get_table_names(schema=schema)
     return self.table_list
   
-  def upload_to_db(self,df,password=input('Click here to type personal pw: '),table_name='dim_users'):
+  def upload_to_db(self,df,password,table_name='dim_users'):
     conn_str = f"postgresql://postgres:{password}@localhost:5432/sales_data"
     with create_engine(conn_str).connect() as conn:
       df.to_sql(table_name, con=conn, index=False, if_exists='replace')
@@ -35,8 +35,10 @@ class DatabaseConnector:
 
 if __name__ == '__main__': # to test code 
   inst = DatabaseConnector(yaml_file)
+  with open('pw.txt','r') as pw:
+    password = pw.read().strip()# strip() to remove newline break in .txt files
   df = pd.DataFrame({
     'id': [1, 2, 3],
     'name': ['Alice', 'Bob', 'Charlie'],
     'age': [25, 30, 35]})
-  inst.upload_to_db(df,table_name='new table test')
+  inst.upload_to_db(df,password,table_name='new table test')
