@@ -1,5 +1,5 @@
 import yaml
-from sqlalchemy import create_engine, inspect, MetaData,text
+from sqlalchemy import create_engine, inspect
 
 yaml_file = 'db_creds.yaml'
 
@@ -7,6 +7,7 @@ class DatabaseConnector:
 
   def __init__(self,file_path):
     self.file_path = file_path
+    self.table_list = []
 
   def path(self):
     return self.file_path
@@ -22,27 +23,12 @@ class DatabaseConnector:
     
   def list_db_tables(self,schema='public'):
     engine = self.init_db_engine()
-    with engine.connect() as conn:
-        result = conn.execute(f"select count(*) from legacy_users")
-        tables = [row[0] for row in result]
-    return tables
-    # inspector = inspect(engine)
-    # return inspector.get_table_names(schema=schema)
-
-  def list_tables(self, schema='public'):
-    engine = self.init_db_engine()
-    metadata = MetaData()
-    metadata.reflect(engine, schema=schema)
-    return list(metadata.tables.keys())
+    return inspect(engine).get_table_names(schema=schema)
   
   def upload_to_db(self,df,table):
     pass 
 
 if __name__ == '__main__': # to test code 
   inst = DatabaseConnector(yaml_file)
-  engine = inst.init_db_engine()
-  with engine.connect() as conn:
-    result = conn.execute(f"select count(*) from legacy_users")
-    tables = [row[0] for row in result]
-    print(tables)
+  print(inst.list_db_tables())
   
