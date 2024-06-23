@@ -14,24 +14,21 @@ class DataExtractor:
       return pd.read_sql_table(table_name,engine)
     else:
       return 'Table not in schema.'
+    
   def retrieve_pdf_data(self,url):
-    df = tabula.read_pdf(url, pages='all')
-    df2 = tabula.read_pdf(url)
-    tabula.convert_into_by_batch("input_directory", output_format='csv', pages='all')
-
+    df_list = tabula.read_pdf(url, pages='all')
+    df = pd.DataFrame()
+    for dfs in df_list:
+      df = pd.concat([df,dfs])
+    return df
 
   
 
-if __name__=='__main__': # just to test functionality
+if __name__=='__main__': # to test functionality
   yaml_file = 'db_creds.yaml'
-  instance = DatabaseConnector(yaml_file)
+  # instance = DatabaseConnector(yaml_file)
   
   extractor = DataExtractor()
-  df = extractor.read_rds_table(instance,'legacy_users')
-  # print(len(df))
-  # for name in instance.list_db_tables():
-  #   if 'user' in name:
-  #     print(name)
-  print(df.head())
+  df = extractor.retrieve_pdf_data(pdf_link)
 
-  # print(len(instance.retrieve_pdf_data(pdf_link)))
+  print(len(df))
