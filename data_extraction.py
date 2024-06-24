@@ -2,6 +2,8 @@ from database_utils import DatabaseConnector
 import pandas as pd
 import tabula
 import requests
+import boto3
+from io import BytesIO
 
 pdf_link = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'
 
@@ -42,6 +44,14 @@ class DataExtractor:
       return df
     else:
       print("Code error")
+
+  def extract_from_s3(self,url):
+    bucket,file = url.replace('s3://','').split('/')[0],url.replace('s3://','').split('/')[1:]
+    s3 = boto3.client('s3')
+    response = s3.get_object(Bucket=bucket, Key='/'.join(file))
+    data = response['Body'].read()
+    return pd.read_csv(BytesIO(data))
+
 
   
 
