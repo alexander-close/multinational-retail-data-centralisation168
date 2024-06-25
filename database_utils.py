@@ -27,7 +27,7 @@ class DatabaseConnector:
     self.table_list = inspect(engine).get_table_names(schema=schema)
     return self.table_list
   
-  def upload_to_db(self,df,password,table_name='dim_users'):
+  def upload_to_db(self,df,password,table_name):
     conn_str = f"postgresql://postgres:{password}@localhost:5432/sales_data"
     with create_engine(conn_str).connect() as conn:
       df.to_sql(table_name, con=conn, index=False, if_exists='replace')

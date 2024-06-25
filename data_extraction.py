@@ -46,6 +46,7 @@ class DataExtractor:
       print("Code error")
 
   def extract_from_s3(self,url):
+    # requires >>>aws configure (eu-west-1,output: csv) 
     bucket,file = url.replace('s3://','').split('/')[0],url.replace('s3://','').split('/')[1:]
     s3 = boto3.client('s3')
     response = s3.get_object(Bucket=bucket, Key='/'.join(file))
