@@ -27,3 +27,6 @@ class DataCleaning:
     clean_df = df.copy()
     clean_df['weight'] = clean_df['weight'].map(kg)
     return clean_df
+  
+  def clean_products_data(self,df):
+    pass
