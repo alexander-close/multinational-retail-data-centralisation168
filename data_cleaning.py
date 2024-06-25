@@ -30,3 +30,7 @@ class DataCleaning:
   
   def clean_products_data(self,df):
     pass
+  def clean_orders_data(self,df):
+    clean_df = df.copy()
+    clean_df = clean_df.drop(labels=['first_name','last_name','1'],axis=1)
+    return clean_df
