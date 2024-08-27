@@ -1,14 +1,20 @@
+import pandas as pd
+
 class DataCleaning:
   def __init__(self):
     pass
 
-  def clean_user_data(self):
-    # needs to fix NULL values, errors with dates, incorrectly typed values and rows filled with the wrong information
-    pass
+  def clean_user_data(self,df):
+    df.date_of_birth = pd.to_datetime(df.date_of_birth, errors='coerce').dt.date
+    df.join_date = pd.to_datetime(df.join_date, errors='coerce').dt.date
+    df.card_number = str(df.card_number)
+    return df
 
-  def clean_card_data(self):
-    pass
-    # cleans data to remove any erroneous values, NULL values or errors with formatting
+  def clean_card_data(self,df):
+    df.expiry_date = pd.to_datetime(df.expiry_date).dt.date
+    df.date_payment_confirmed = pd.to_datetime(df.date_payment_confirmed).dt.date
+    return df
+    
 
   def convert_product_weights(self,df):
     def kg(x):

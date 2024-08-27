@@ -1,58 +1,78 @@
-Repo for AICore RDS project, June 2024.
+# Multinational Retail Data Centralisation
 
-Project title: Multinational Retail Data Centralisation
+This repo contains Python scripts for the AICore RDS project, June 2024.
 
-Installations needed: 
+### Table of Contents
 
-&nbsp; &nbsp; &nbsp; pandas
+* [Outline of the project](#outline-of-the-project)
+* [Installation](#installations-needed)
+* [Structure of the code](#structure-of-the-code)
+* [Other files](#other-files)
 
-&nbsp; &nbsp; &nbsp; tabula
 
-&nbsp; &nbsp; &nbsp; requests
+## Outline of the project
 
-&nbsp; &nbsp; &nbsp; boto3
+The purpose of this code is to scrape date from a number of distinct data sources and centralise everything onto a single RDBMS after cleaning.
 
-&nbsp; &nbsp; &nbsp; PyYAML
+Specifically, data is to be ingested from a PDF file (containing credit card informtion)in an AWS S3 bucket, from an AWS RDS database (where legacy user information can be found), and from an URL address (physical store information) to be access via an API.
 
-&nbsp; &nbsp; &nbsp; sqlalchemy
+When the data is extracted and converted into Pandas DataFrame format it is then cleaned, before being sent to a database management system operated by the user.
 
-&nbsp; &nbsp; &nbsp; psycopg2
 
-The project builds three classes:
 
-**DatabaseConnector** (in database_util.py): a connector with methods:
+### Installations needed: 
 
-&nbsp; &nbsp; &nbsp; -- read_db_creds() reads database creditials from a local yaml file
+`pandas`
+&nbsp; `tabula`
+&nbsp; `requests`
+&nbsp; `boto3`
+&nbsp; `PyYAML`
+&nbsp; `sqlalchemy`
+&nbsp; `psycopg2`
 
-&nbsp; &nbsp; &nbsp; -- init_db_engine() builds an engine using the credentials
+## Structure of the code
 
-&nbsp; &nbsp; &nbsp; -- list_db_tables() prints (by default public) table names
+The project builds three classes.
 
-&nbsp; &nbsp; &nbsp; -- upload_to_db() provides upload capabilities to your own locally hosted database
+**1) `DatabaseConnector`** (`database_util.py`): a connector with the following methods.
 
-**DataExtractor** (data_extraction.py): an extractor which imports the previous class, with the methods:
+&nbsp; &nbsp; &nbsp; - `read_db_creds()` reads database creditials from a local yaml file
 
-&nbsp; &nbsp; &nbsp; -- read_rds_table() takes an instance of the connector class and extracts a given table as a DataFrame
+&nbsp; &nbsp; &nbsp; - `init_db_engine()` builds an engine using the credentials
 
-&nbsp; &nbsp; &nbsp; -- retrieve_pdf_data() extracts a weblink PDF file and returns it as a DataFrame
+&nbsp; &nbsp; &nbsp; - `list_db_tables()` prints (by default public) table names
 
-&nbsp; &nbsp; &nbsp; -- list_number_of_stores() is an API that reads an AWS web address and returns the number of stores in the database
+&nbsp; &nbsp; &nbsp; - `upload_to_db()` provides upload capabilities to your own locally hosted database
 
-&nbsp; &nbsp; &nbsp; -- retrieve_stores_data() returns the stores from an AWS web address as a DataFrame
+**2) `DataExtractor`** (`data_extraction.py`): an extractor which imports the previous class, with the methods:
 
-&nbsp; &nbsp; &nbsp; -- extract_from_s3() extracts csv data from an AWS bucket and returns a DataFrame
+&nbsp; &nbsp; &nbsp; - `read_rds_table()` takes an instance of the connector class and extracts a given table as a DataFrame
 
-**DataCleaning** (in data_cleaning.py) is a data cleaner with methods:
+&nbsp; &nbsp; &nbsp; - `retrieve_pdf_data()` extracts a weblink PDF file and returns it as a DataFrame
 
-&nbsp; &nbsp; &nbsp; -- clean_user_data() is currently inert
+&nbsp; &nbsp; &nbsp; - `list_number_of_stores()` is an API that reads an AWS web address and returns the number of stores in the database
 
-&nbsp; &nbsp; &nbsp; -- clean_card_data() is currently inert
+&nbsp; &nbsp; &nbsp; - `retrieve_stores_data()` returns the stores from an AWS web address as a DataFrame
 
-&nbsp; &nbsp; &nbsp; --convert_product_weights() cleans the 'weight' data of an extracted product DataFrame
+&nbsp; &nbsp; &nbsp; - `extract_from_s3()` extracts CSV data from an AWS bucket and returns a DataFrame
 
-&nbsp; &nbsp; &nbsp; -- clean_products_data() is currently inert
+**3) `DataCleaning`** (`data_cleaning.py`) is a data cleaner with the following methods.
 
-&nbsp; &nbsp; &nbsp; -- clean_orders_data() removes the unneeded columns 'first_name', 'last_name' and '1' from an extracted orders DataFrame
+&nbsp; &nbsp; &nbsp; - `clean_user_data()` currently converts datetime information into the correct format.
 
+&nbsp; &nbsp; &nbsp; - `clean_card_data()` currently converts datetime information into the correct format.
+
+&nbsp; &nbsp; &nbsp; - `convert_product_weights()` cleans the '`weight`' data of an extracted product DataFrame.
+
+&nbsp; &nbsp; &nbsp; - `clean_products_data()` is currently inert.
+
+&nbsp; &nbsp; &nbsp; - `clean_orders_data()` removes the unneeded columns '`first_name`', '`last_name`' and '`1`' from an extracted orders DataFrame.
+
+### Other files
+The scripts reference a number of external `yaml` files.
+
+* db_creds.yaml, wherein are stored credentials to access the AWS RDB.
+* keys.yaml, conatining other credentials such as the users database password and PI keys.
+* constants.yaml, which stores the URL endpoint and S3 location. 
 
 **Licence**: A. Close 2024
