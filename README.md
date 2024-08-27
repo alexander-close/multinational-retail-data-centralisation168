@@ -8,7 +8,7 @@ This repo contains Python scripts for the AICore RDS project, June 2024.
 * [Installation](#installations-needed)
 * [Structure of the code](#structure-of-the-code)
 * [Other files](#other-files)
-
+* [Usage](#usage)
 
 ## Outline of the project
 
@@ -71,8 +71,8 @@ The project builds three classes.
 ### Other files
 The scripts reference a number of external `yaml` files.
 
-* db_creds.yaml, wherein are stored credentials to access the AWS RDB.
-* keys.yaml, conatining other credentials such as the users database password and PI keys.
-* constants.yaml, which stores the URL endpoint and S3 location. 
+* `db_creds.yaml`, wherein are stored credentials to access the AWS RDB.
+* `keys.yaml`, conatining other credentials such as the users database password and PI keys.
+* `constants.yaml`, which stores the URL endpoint and S3 location. 
 
 **Licence**: A. Close 2024
