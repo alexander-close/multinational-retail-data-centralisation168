@@ -27,7 +27,7 @@ class DataExtractor:
     else:
       return 'Table not in schema.'
     
-  def retrieve_pdf_data(self, url:str=PDF_URL):
+  def retrieve_pdf_data(self, url:str=PDF_URL) -> pd.DataFrame:
     df_list = tabula.read_pdf(url, pages='all')
     df = pd.DataFrame()
     for dfs in df_list:
