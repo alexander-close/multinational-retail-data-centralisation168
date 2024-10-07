@@ -34,45 +34,33 @@ When the data is extracted and converted into Pandas DataFrame format it is then
 
 The project builds three classes.
 
-**1) `DatabaseConnector`** (`database_util.py`): a connector with the following methods.
+* `DatabaseConnector`** (`database_util.py`)
 
-&nbsp; &nbsp; &nbsp; - `read_db_creds()` reads database credentials from a local yaml file
+* `DataExtractor`** (`data_extraction.py`)
 
-&nbsp; &nbsp; &nbsp; - `init_db_engine()` builds an engine using the credentials
+* `DataCleaning`** (`data_cleaning.py`) 
 
-&nbsp; &nbsp; &nbsp; - `list_db_tables()` prints (by default public) table names
-
-&nbsp; &nbsp; &nbsp; - `upload_to_db()` provides upload capabilities to your own locally hosted database
-
-**2) `DataExtractor`** (`data_extraction.py`): an extractor which imports the previous class, with the methods:
-
-&nbsp; &nbsp; &nbsp; - `read_rds_table()` takes an instance of the connector class and extracts a given table as a DataFrame
-
-&nbsp; &nbsp; &nbsp; - `retrieve_pdf_data()` extracts a web link PDF file and returns it as a DataFrame
-
-&nbsp; &nbsp; &nbsp; - `list_number_of_stores()` is an API that reads an AWS web address and returns the number of stores in the database
-
-&nbsp; &nbsp; &nbsp; - `retrieve_stores_data()` returns the stores from an AWS web address as a DataFrame
-
-&nbsp; &nbsp; &nbsp; - `extract_from_s3()` extracts CSV data from an AWS bucket and returns a DataFrame
-
-**3) `DataCleaning`** (`data_cleaning.py`) is a data cleaner with the following methods.
-
-&nbsp; &nbsp; &nbsp; - `clean_user_data()` currently converts datetime information into the correct format.
-
-&nbsp; &nbsp; &nbsp; - `clean_card_data()` currently converts datetime information into the correct format.
-
-&nbsp; &nbsp; &nbsp; - `convert_product_weights()` cleans the '`weight`' data of an extracted product DataFrame.
-
-&nbsp; &nbsp; &nbsp; - `clean_products_data()` is currently inert.
-
-&nbsp; &nbsp; &nbsp; - `clean_orders_data()` removes the unneeded columns '`first_name`', '`last_name`' and '`1`' from an extracted orders DataFrame.
-
-### Other files
 The scripts reference a number of external `yaml` files.
 
 * `db_creds.yaml`, wherein are stored credentials to access the AWS RDB.
-* `keys.yaml`, containing other credentials such as the users database password and PI keys.
+* `keys.yaml`, containing other credentials such as the user's database password and PI keys.
 * `constants.yaml`, which stores the URL endpoint and S3 location. 
+
+```mermaid
+---
+title: EProject RD
+---
+erDiagram
+    "DatabaseConnector" ||--|| "DataExtractor" : ""
+    "keys" ||--|| "DatabaseConnector" : ""
+    "keys" ||--|| "DataExtractor" : ""
+    "db_creds" ||--|| "DatabaseConnector" : ""
+    "constants" ||--|| "DataExtractor" : ""
+
+    "DatabaseConnector" ||--|| "main.py" : ""
+    "DataExtractor" ||--|| "main.py" : ""
+    "DataCleaning" ||--|| "main.py" : "" 
+```
+
 
 **Licence**: A. Close 2024
