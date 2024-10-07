@@ -12,15 +12,15 @@ This repo contains Python scripts for the AICore RDS project, June 2024.
 
 ## Outline of the project
 
-The purpose of this code is to scrape date from a number of distinct data sources and centralise everything onto a single RDBMS after cleaning.
+The purpose of this code is to scrape data from a number of distinct legacy sources and centralise everything onto a single RDBMS after cleaning.
 
-Specifically, data is to be ingested from a PDF file (containing credit card informtion)in an AWS S3 bucket, from an AWS RDS database (where legacy user information can be found), and from an URL address (physical store information) to be access via an API.
+Specifically, data is to be ingested from a PDF file (containing credit card information) in an AWS S3 bucket, from an AWS RDS database (where legacy user information can be found), and from an URL address (physical store information) to be accessed via an API.
 
-When the data is extracted and converted into Pandas DataFrame format it is then cleaned, before being sent to a database management system operated by the user.
+When the data is extracted and converted into Pandas DataFrame format it is then cleaned before being sent to a local database management system operated by the user.
 
 
 
-### Installations needed: 
+### Dependencies: 
 
 `pandas`
 &nbsp; `tabula`
@@ -36,7 +36,7 @@ The project builds three classes.
 
 **1) `DatabaseConnector`** (`database_util.py`): a connector with the following methods.
 
-&nbsp; &nbsp; &nbsp; - `read_db_creds()` reads database creditials from a local yaml file
+&nbsp; &nbsp; &nbsp; - `read_db_creds()` reads database credentials from a local yaml file
 
 &nbsp; &nbsp; &nbsp; - `init_db_engine()` builds an engine using the credentials
 
@@ -48,7 +48,7 @@ The project builds three classes.
 
 &nbsp; &nbsp; &nbsp; - `read_rds_table()` takes an instance of the connector class and extracts a given table as a DataFrame
 
-&nbsp; &nbsp; &nbsp; - `retrieve_pdf_data()` extracts a weblink PDF file and returns it as a DataFrame
+&nbsp; &nbsp; &nbsp; - `retrieve_pdf_data()` extracts a web link PDF file and returns it as a DataFrame
 
 &nbsp; &nbsp; &nbsp; - `list_number_of_stores()` is an API that reads an AWS web address and returns the number of stores in the database
 
@@ -72,7 +72,7 @@ The project builds three classes.
 The scripts reference a number of external `yaml` files.
 
 * `db_creds.yaml`, wherein are stored credentials to access the AWS RDB.
-* `keys.yaml`, conatining other credentials such as the users database password and PI keys.
+* `keys.yaml`, containing other credentials such as the users database password and PI keys.
 * `constants.yaml`, which stores the URL endpoint and S3 location. 
 
 **Licence**: A. Close 2024
